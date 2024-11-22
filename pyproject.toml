@@ -1,7 +1,7 @@
 [project]
 name = "terminal"
 version = "0.1.0"
-dependencies = []
+dependencies = ["appscript"]
 
 [project.optional-dependencies]
 dev = ["pytest", "mypy"]
@@ -16,6 +16,10 @@ strict = true
 warn_unreachable = true
 extra_checks = true
 enable_error_code = "possibly-undefined, redundant-expr, truthy-iterable, truthy-bool"
+
+[[tool.mypy.overrides]]
+module = ["appscript.*"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = "tests"
