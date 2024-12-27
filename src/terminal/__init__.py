@@ -58,12 +58,19 @@ def main(
     except OSError as e:
         raise UserError(f"Error getting tty name of stdout: {e}")
 
-    tabs = [j for i in terminal.windows.tabs[its.tty == tty].get() for j in i]
+    # For some reason, we can't directly iterate terminal.windows.tabs:
+    # "Terminal got an error: AppleEvent handler failed." number -10000
+    tab = next(
+        (
+            tab
+            for window in terminal.windows.get()
+            for tab in window.tabs[its.tty == tty].get()
+        ),
+        None,
+    )
 
-    if not tabs:
+    if tab is None:
         raise UserError(f'Tab with tty "{tty}" not found.')
-
-    tab = tabs[0]
 
     if cursor is not None:
         tab.cursor_color.set(cursor)
